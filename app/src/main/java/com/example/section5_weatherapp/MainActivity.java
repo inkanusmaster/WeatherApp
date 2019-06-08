@@ -18,6 +18,7 @@ import java.net.URL;
 public class MainActivity extends AppCompatActivity {
 
     String url = "http://api.openweathermap.org/data/2.5/weather?q=Kielce&units=metric&appid=81a2e49d6e0fc5e41bf3f4bfcc77cbbd";
+    String object, value;
 
     @SuppressLint("StaticFieldLeak")
     public class DownloadTask extends AsyncTask<String, Void, String> {
@@ -44,28 +45,46 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        protected void onPostExecute(String s) { //pod stringiem s mamy wynik result
+        protected void onPostExecute(String s) {
             super.onPostExecute(s);
+//            try {
+//                JSONObject jsonObject = new JSONObject(s);
+//                weatherInfo = jsonObject.getString("weather");
+//                Log.i("Weather info content",weatherInfo);
+//                JSONArray jsonArray = new JSONArray(weatherInfo);
+//                for (int i = 0; i < jsonArray.length(); i++) {
+//                    JSONObject jsonPart = jsonArray.getJSONObject(i);
+//                    Log.i("Main",jsonPart.getString("main"));
+//                }
             try {
-                JSONObject jsonObject = new JSONObject(s);
-                String weatherInfo = jsonObject.getString("weather"); //Pobiera z JSONa to co jest w sekcji "weather"
-                JSONArray jsonArray = new JSONArray(weatherInfo); //dodajemy do tablicy obiekty z weatherInfo (z sekcji "weather")
-                for (int i = 0; i < jsonArray.length(); i++) { //lecimy po tablicy i wybieramy te obiekty, które nas interesują (z sekcji "weather")
-                    JSONObject jsonPart = jsonArray.getJSONObject(i);
-                    Log.i("Obiekt z tablicy",jsonPart.toString());
+//
+                JSONObject fullJSONCode = new JSONObject(s);
 
-                }
+                object = fullJSONCode.getString("name");
+                Log.i("name",object);
+
+                value = fullJSONCode.getString("weather");
+                JSONArray weather = new JSONArray(value);
+                JSONObject jsonPart = weather.getJSONObject(0);
+                value = jsonPart.getString("description");
+                Log.i("weather->description",value);
+
+                value = fullJSONCode.getJSONObject("main").getString("temp");
+                Log.i("main->temp", value);
+
+
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public void downloadContent(){
+    public void downloadContent() {
         DownloadTask task = new DownloadTask();
         try {
             task.execute(url).get();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
