@@ -4,8 +4,8 @@ import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,11 +14,18 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
+@SuppressWarnings("ALL")
 public class MainActivity extends AppCompatActivity {
 
     String url = "http://api.openweathermap.org/data/2.5/weather?q=Kielce&units=metric&appid=81a2e49d6e0fc5e41bf3f4bfcc77cbbd";
-    String object, value;
+    String name, description, temp, pressure, humidity, speed, rain, clouds;
+    TextView weatherTextView, cityTextView;
+    Map<String, String> weatherMap = new HashMap<>();
 
     @SuppressLint("StaticFieldLeak")
     public class DownloadTask extends AsyncTask<String, Void, String> {
@@ -47,31 +54,39 @@ public class MainActivity extends AppCompatActivity {
 
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-//            try {
-//                JSONObject jsonObject = new JSONObject(s);
-//                weatherInfo = jsonObject.getString("weather");
-//                Log.i("Weather info content",weatherInfo);
-//                JSONArray jsonArray = new JSONArray(weatherInfo);
-//                for (int i = 0; i < jsonArray.length(); i++) {
-//                    JSONObject jsonPart = jsonArray.getJSONObject(i);
-//                    Log.i("Main",jsonPart.getString("main"));
-//                }
+
             try {
-//
                 JSONObject fullJSONCode = new JSONObject(s);
 
-                object = fullJSONCode.getString("name");
-                Log.i("name",object);
+                name = fullJSONCode.getString("name");
 
-                value = fullJSONCode.getString("weather");
-                JSONArray weather = new JSONArray(value);
-                JSONObject jsonPart = weather.getJSONObject(0);
-                value = jsonPart.getString("description");
-                Log.i("weather->description",value);
+                String weather = fullJSONCode.getString("weather");
+                JSONArray weatherArray = new JSONArray(weather);
+                JSONObject jsonPart = weatherArray.getJSONObject(0);
+                description = jsonPart.getString("description");
+                weatherMap.put("Description: ", description + "\n");
 
-                value = fullJSONCode.getJSONObject("main").getString("temp");
-                Log.i("main->temp", value);
+                temp = fullJSONCode.getJSONObject("main").getString("temp");
+                weatherMap.put("Temperature: ", temp + "C\n");
 
+                pressure = fullJSONCode.getJSONObject("main").getString("pressure");
+                weatherMap.put("Pressure: ", pressure + "hPa\n");
+
+                humidity = fullJSONCode.getJSONObject("main").getString("humidity");
+                weatherMap.put("Humidity: ", humidity + "%\n");
+
+                speed = fullJSONCode.getJSONObject("wind").getString("speed");
+                weatherMap.put("Wind Speed: ", speed + "m/s\n");
+
+                if (fullJSONCode.has("rain")) {
+                    rain = fullJSONCode.getJSONObject("rain").getString("3h");
+                    weatherMap.put("Rain: ", rain + "mm\n");
+                }
+
+                if (fullJSONCode.has("clouds")) {
+                    clouds = fullJSONCode.getJSONObject("clouds").getString("all");
+                    weatherMap.put("Clouds: ", clouds + "%\n");
+                }
 
 
             } catch (Exception e) {
@@ -89,14 +104,30 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     public void displayWeather(View view) {
+        weatherTextView.setText("");
+        cityTextView.setText("");
+        cityTextView.setText(name);
 
+        Set entries = weatherMap.entrySet();
+        Iterator iterator = entries.iterator();
+        while (iterator.hasNext()) {
+            Map.Entry entry = (Map.Entry) iterator.next();
+            Object key = entry.getKey();
+            Object value = entry.getValue();
+            weatherTextView.append(key + " " + value);
+            System.out.println(key + " " + value);
+        }
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        cityTextView = findViewById(R.id.cityTextView);
+        weatherTextView = findViewById(R.id.weatherTextView);
         downloadContent();
     }
 }
