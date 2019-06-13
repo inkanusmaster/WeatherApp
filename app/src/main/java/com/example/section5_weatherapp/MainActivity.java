@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -25,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     String url = "http://api.openweathermap.org/data/2.5/weather?q=Kielce&units=metric&appid=81a2e49d6e0fc5e41bf3f4bfcc77cbbd";
     String name, description, temp, pressure, humidity, speed, rain, clouds;
     TextView weatherTextView, cityTextView;
+    EditText setCityEditText;
     Map<String, String> weatherMap = new HashMap<>();
 
     @SuppressLint("StaticFieldLeak")
@@ -119,6 +122,9 @@ public class MainActivity extends AppCompatActivity {
             weatherTextView.append(key + " " + value);
             System.out.println(key + " " + value);
         }
+
+//        setCityEditText.onEditorAction(EditorInfo.IME_ACTION_DONE);
+
     }
 
 
@@ -128,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         cityTextView = findViewById(R.id.cityTextView);
         weatherTextView = findViewById(R.id.weatherTextView);
+        setCityEditText = findViewById(R.id.setCityEditText);
         downloadContent();
     }
 }
