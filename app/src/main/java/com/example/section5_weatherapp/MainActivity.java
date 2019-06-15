@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -28,7 +29,7 @@ import java.util.regex.Pattern;
 public class MainActivity extends AppCompatActivity {
 
     String url = "http://api.openweathermap.org/data/2.5/weather?q=SOMETHING&units=metric&appid=81a2e49d6e0fc5e41bf3f4bfcc77cbbd";
-    String name, description, temp, pressure, humidity, speed, rain, clouds;
+    String name, country, description, temp, pressure, humidity, speed, rain, clouds;
     TextView weatherTextView, cityTextView;
     EditText findCityEditText;
     Map<String, String> weatherMap = new HashMap<>();
@@ -68,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
 
                 name = fullJSONCode.getString("name");
 
+                country = fullJSONCode.getJSONObject("sys").getString("country");
+
                 String weather = fullJSONCode.getString("weather");
                 JSONArray weatherArray = new JSONArray(weather);
                 JSONObject jsonPart = weatherArray.getJSONObject(0);
@@ -98,11 +101,12 @@ public class MainActivity extends AppCompatActivity {
 
 
             } catch (Exception e) {
-                Toast.makeText(MainActivity.this, "City not found!", Toast.LENGTH_SHORT).show();
+                Toast toast = Toast.makeText(MainActivity.this, "City not found!", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 500);
+                toast.show();
                 found = false;
                 e.printStackTrace();
             }
-            cityTextView.setText(name);
 
             Set entries = weatherMap.entrySet();
             Iterator iterator = entries.iterator();
@@ -114,8 +118,12 @@ public class MainActivity extends AppCompatActivity {
 
                 System.out.println(key + " " + value);
 
-                if (found){
+                if (found) {
+                    cityTextView.setText(name + " (" + country + ")");
                     findCityEditText.onEditorAction(EditorInfo.IME_ACTION_DONE);
+                } else {
+                    cityTextView.setText("");
+                    weatherTextView.setText("");
                 }
 
             }
@@ -132,19 +140,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @SuppressLint("SetTextI18n")
-    public void displayWeather(View view){
+    public void displayWeather(View view) {
 
         url = "http://api.openweathermap.org/data/2.5/weather?q=SOMETHING&units=metric&appid=81a2e49d6e0fc5e41bf3f4bfcc77cbbd";
         weatherTextView.setText("");
         cityTextView.setText("");
-        String enteredCity="";
+        String enteredCity = "";
 
         Pattern p = Pattern.compile("q=(.*?)&");
         Matcher m = p.matcher(url);
-        if (m.find()){
+        if (m.find()) {
             enteredCity = findCityEditText.getText().toString();
             System.out.println(enteredCity);
-            url = url.replace(m.group(1).toString(),enteredCity);
+            url = url.replace(m.group(1).toString(), enteredCity);
         } else {
             System.out.println("Pattern not found!");
         }
