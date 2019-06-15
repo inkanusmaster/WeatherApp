@@ -14,7 +14,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="CITY"
         android:textColor="#000000"
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -22,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/setCityEditText"
+        android:id="@+id/findCityEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="#000000"
@@ -50,7 +49,7 @@
         android:text="What's the weather?"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/setCityEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/findCityEditText" />
 
     <TextView
         android:id="@+id/weatherTextView"
