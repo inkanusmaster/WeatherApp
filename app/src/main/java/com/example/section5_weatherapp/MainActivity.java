@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            boolean found = true;
 
             try {
                 JSONObject fullJSONCode = new JSONObject(s);
@@ -97,7 +99,25 @@ public class MainActivity extends AppCompatActivity {
 
             } catch (Exception e) {
                 Toast.makeText(MainActivity.this, "City not found!", Toast.LENGTH_SHORT).show();
+                found = false;
                 e.printStackTrace();
+            }
+            cityTextView.setText(name);
+
+            Set entries = weatherMap.entrySet();
+            Iterator iterator = entries.iterator();
+            while (iterator.hasNext()) {
+                Map.Entry entry = (Map.Entry) iterator.next();
+                Object key = entry.getKey();
+                Object value = entry.getValue();
+                weatherTextView.append(key + " " + value);
+
+                System.out.println(key + " " + value);
+
+                if (found){
+                    findCityEditText.onEditorAction(EditorInfo.IME_ACTION_DONE);
+                }
+
             }
         }
     }
@@ -132,20 +152,7 @@ public class MainActivity extends AppCompatActivity {
 
         downloadContent();
 
-        cityTextView.setText(name);
 
-        Set entries = weatherMap.entrySet();
-        Iterator iterator = entries.iterator();
-        while (iterator.hasNext()) {
-            Map.Entry entry = (Map.Entry) iterator.next();
-            Object key = entry.getKey();
-            Object value = entry.getValue();
-            weatherTextView.append(key + " " + value);
-
-            System.out.println(key + " " + value);
-        }
-
-//        setCityEditText.onEditorAction(EditorInfo.IME_ACTION_DONE);
     }
 
 
