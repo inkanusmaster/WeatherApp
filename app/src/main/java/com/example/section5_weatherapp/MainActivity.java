@@ -90,15 +90,20 @@ public class MainActivity extends AppCompatActivity {
                 weatherMap.put("Wind Speed: ", speed + "m/s\n");
 
                 if (fullJSONCode.has("rain")) {
-                    rain = fullJSONCode.getJSONObject("rain").getString("3h");
-                    weatherMap.put("Rain: ", rain + "mm\n");
+                    rain = fullJSONCode.getString("rain");//getJSONObject("rain").getString("3h");
+                    System.out.println(rain);
+                    Pattern p = Pattern.compile(":(.*?)\\}$");
+                    Matcher m = p.matcher(rain);
+                    if (m.find()){
+                        weatherMap.put("Rain: ", m.group(1).toString() + "mm\n");
+                        System.out.println(m.group(1));
+                    }
                 }
 
                 if (fullJSONCode.has("clouds")) {
                     clouds = fullJSONCode.getJSONObject("clouds").getString("all");
                     weatherMap.put("Clouds: ", clouds + "%\n");
                 }
-
 
             } catch (Exception e) {
                 Toast toast = Toast.makeText(MainActivity.this, "City not found!", Toast.LENGTH_SHORT);
