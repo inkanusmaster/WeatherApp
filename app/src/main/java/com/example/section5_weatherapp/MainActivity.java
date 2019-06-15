@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
 
             } catch (Exception e) {
                 Toast toast = Toast.makeText(MainActivity.this, "City not found!", Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 500);
+                toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
                 toast.show();
                 found = false;
                 e.printStackTrace();
@@ -159,10 +159,7 @@ public class MainActivity extends AppCompatActivity {
         System.out.println(url);
 
         downloadContent();
-
-
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,6 +168,5 @@ public class MainActivity extends AppCompatActivity {
         cityTextView = findViewById(R.id.cityTextView);
         weatherTextView = findViewById(R.id.weatherTextView);
         findCityEditText = findViewById(R.id.findCityEditText);
-
     }
 }
