@@ -28,18 +28,19 @@ import java.util.regex.Pattern;
 @SuppressWarnings("ALL")
 public class MainActivity extends AppCompatActivity {
 
-    String url = "http://api.openweathermap.org/data/2.5/weather?q=SOMETHING&units=metric&appid=81a2e49d6e0fc5e41bf3f4bfcc77cbbd";
+    String url = "https://api.openweathermap.org/data/2.5/weather?q=SOMETHING&units=metric&appid=81a2e49d6e0fc5e41bf3f4bfcc77cbbd";
     String name, country, description, temp, pressure, humidity, speed, rain, clouds;
     TextView weatherTextView, cityTextView;
     EditText findCityEditText;
     Map<String, String> weatherMap = new HashMap<>();
+    StringBuilder result;
 
 
     @SuppressLint("StaticFieldLeak")
     public class DownloadTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... urls) {
-            StringBuilder result = new StringBuilder();
+            result = new StringBuilder();
             URL url;
             HttpURLConnection urlConnection;
             try {
@@ -130,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
                     cityTextView.setText("");
                     weatherTextView.setText("");
                 }
-
             }
         }
     }
@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     public void displayWeather(View view) {
 
-        url = "http://api.openweathermap.org/data/2.5/weather?q=SOMETHING&units=metric&appid=81a2e49d6e0fc5e41bf3f4bfcc77cbbd";
+        url = "https://api.openweathermap.org/data/2.5/weather?q=SOMETHING&units=metric&appid=81a2e49d6e0fc5e41bf3f4bfcc77cbbd";
         weatherTextView.setText("");
         cityTextView.setText("");
         String enteredCity = "";
